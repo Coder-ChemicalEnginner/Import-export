@@ -4,16 +4,8 @@ export const HomeContainer = styled.div`
   background-color: ${props => props.bgColor};
   color: ${props => props.color};
   @media (max-width: 767px) {
-    margin-top: -21px;
+    margin-top: -25px;
   }
-`
-
-export const ErrorContainer = styled.div`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `
 
 export const HeadDiv = styled.div`
@@ -37,6 +29,7 @@ export const ListContainer = styled.ul`
   margin-bottom: 25px;
   @media (min-width: 768px) {
     display: flex;
+    flex-direction: column;
   }
 `
 
@@ -50,37 +43,18 @@ export const ImageTag = styled.img`
   width: ${props => props.width};
   object-fit: contain;
   @media (max-width: 767px) {
-    width: 100%;
+    width: 150px;
   }
 `
-export const LogoImage = styled.img`
-  width: ${props => props.width};
-  object-fit: contain;
-`
-
 export const ContentDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding-left: 30px;
+  @media (max-width: 767px) {
+    justify-content: center;
+  }
 `
 
 export const ParaTag = styled.p`
   font-size: ${props => props.fontSize};
-`
-export const ErrorImg = styled.img`
-  width: 35%;
-  object-fit: contain;
-`
-export const Head = styled.h1``
-
-export const Para = styled.p``
-
-export const Button = styled.button`
-  background-color: #4f46e5;
-  color: #ffffff;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 4px;
 `

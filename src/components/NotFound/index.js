@@ -1,44 +1,30 @@
-import Header from '../Header'
-import Sidebar from '../Sidebar'
-import ThemeContext from '../../Context/ThemeContext'
+import {ImageEl, DivEl, Header, Para} from './styledComponents'
 
-import {
-  MainBody,
-  SidebarContainer,
-  NotFoundImage,
-  NotFoundContainer,
-  NotFoundText,
-} from './styledComponents'
+import AppTheme from '../../context/Theme'
 
 const NotFound = () => (
-  <ThemeContext.Consumer>
+  <AppTheme.Consumer>
     {value => {
-      const {isDarkTheme} = value
-      const theme = isDarkTheme ? 'dark' : 'light'
-
-      const imgUrl = isDarkTheme
-        ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-not-found-dark-theme-img.png'
-        : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-not-found-light-theme-img.png'
-
+      const {activeTheme} = value
+      const bgColor = activeTheme === 'light' ? '#ffffff' : '#000000'
+      const color = activeTheme === 'light' ? '#000000' : '#ffffff'
       return (
-        <div>
-          <Header />
-          <MainBody>
-            <SidebarContainer>
-              <Sidebar />
-            </SidebarContainer>
-            <NotFoundContainer theme={theme}>
-              <NotFoundImage src={imgUrl} alt="not found" />
-              <NotFoundText theme={theme}>Page Not Found</NotFoundText>
-              <NotFoundText as="p" theme={theme}>
-                we are sorry, the page you requested could not be found.
-              </NotFoundText>
-            </NotFoundContainer>
-          </MainBody>
-        </div>
+        <DivEl bgColor={bgColor} color={color}>
+          {activeTheme === 'light' ? (
+            <>
+              <ImageEl src="https://assets.ccbp.in/frontend/react-js/nxt-watch-not-found-light-theme-img.png" />
+            </>
+          ) : (
+            <>
+              <ImageEl src="https://assets.ccbp.in/frontend/react-js/nxt-watch-not-found-dark-theme-img.png" />
+            </>
+          )}
+          <Header>Page Not Found</Header>
+          <Para>We are sorry,the page you requested could not be found.</Para>
+        </DivEl>
       )
     }}
-  </ThemeContext.Consumer>
+  </AppTheme.Consumer>
 )
 
 export default NotFound

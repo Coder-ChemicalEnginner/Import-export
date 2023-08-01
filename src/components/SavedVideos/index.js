@@ -1,93 +1,88 @@
-import {RiMenuAddLine} from 'react-icons/ri'
+import {Component} from 'react'
+import {Link, Redirect} from 'react-router-dom'
+import Cookies from 'js-cookie'
 
-import Header from '../Header'
-import Sidebar from '../Sidebar'
+import {MdPlaylistAdd} from 'react-icons/md'
+
+import AppTheme from '../../context/Theme'
 
 import {
-  MainBody,
-  SidebarContainer,
-  SavedVideosMainContainer,
-  SavedVideosContainer,
-  SavedMenuContainer,
-  IconContainer,
-  MenuHeading,
-  VideosList,
-  NoVideosContainer,
-  NoVideosImg,
-  FailureText,
+  SavedVideosMainDiv,
+  UnSavedVideosDiv,
+  SavedVideosDiv,
+  NotFoundHead,
+  NotFoundPara,
+  NoVideosImageEl,
+  VideosImageEl,
+  ListContainer,
+  ListItems,
+  MainHeader,
 } from './styledComponents'
 
-import TrendingVideoCard from '../TrendingVideoCard'
-import SavedVideosContext from '../../Context/SavedVideosContext'
-import ThemeContext from '../../Context/ThemeContext'
-
-const SavedVideos = () => {
-  const savedList = themeValue => {
-    const {isDarkTheme} = themeValue
-
-    const theme = isDarkTheme ? 'dark' : 'light'
+class SavedVideos extends Component {
+  render() {
+    const jwtToken = Cookies.get('jwt_token')
+    if (jwtToken === undefined) {
+      return <Redirect to="/login" />
+    }
 
     return (
-      <SavedVideosContext.Consumer>
-        {value => {
-          const {savedVideosList} = value
-          if (savedVideosList.length === 0) {
-            return (
-              <NoVideosContainer>
-                <NoVideosImg
-                  src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-saved-videos-img.png "
-                  alt="no saved videos"
-                />
-
-                <FailureText theme={theme} as="h1">
-                  No saved videos found
-                </FailureText>
-                <FailureText theme={theme} as="p">
-                  You can save your videos while watching them
-                </FailureText>
-              </NoVideosContainer>
-            )
-          }
+      <AppTheme.Consumer>
+        {values => {
+          const {activeTheme, savedVideos} = values
+          const bgColor = activeTheme === 'light' ? '#ffffff' : '#000000'
+          const color = activeTheme === 'light' ? '#000000' : '#ffffff'
           return (
-            <VideosList>
-              {savedVideosList.map(each => (
-                <TrendingVideoCard videoDetails={each} key={each.id} />
-              ))}
-            </VideosList>
+            <SavedVideosMainDiv bgColor={bgColor} color={color}>
+              {savedVideos.length === 0 ? (
+                <UnSavedVideosDiv>
+                  <NoVideosImageEl
+                    src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-saved-videos-img.png"
+                    alt="no saved videos"
+                  />
+                  <NotFoundHead>No saved videos found</NotFoundHead>
+                  <NotFoundPara>
+                    You can save your videos while watching them
+                  </NotFoundPara>
+                </UnSavedVideosDiv>
+              ) : (
+                <>
+                  <MainHeader
+                    bgColor={activeTheme === 'light' ? '#f1f1f1' : '#181818'}
+                  >
+                    <MdPlaylistAdd color="red" /> Saved Videos
+                  </MainHeader>
+                  {savedVideos.map(data => (
+                    <Link
+                      to={`/videos/${data.id}`}
+                      className={
+                        activeTheme === 'light' ? 'link-light' : 'link-dark'
+                      }
+                      key={data.id}
+                    >
+                      <SavedVideosDiv>
+                        <VideosImageEl
+                          src={data.thumbnailUrl}
+                          alt={data.thumbnailUrl}
+                        />
+                        <ListContainer>
+                          <ListItems fs="20px">{data.title}</ListItems>
+                          <ListItems fs="12px">{data.channel.name}</ListItems>
+                          <ListItems fs="12px">
+                            {data.viewCount} Views . {data.publishedAt}
+                          </ListItems>
+                        </ListContainer>
+                      </SavedVideosDiv>
+                    </Link>
+                  ))}
+                </>
+              )}
+            </SavedVideosMainDiv>
           )
         }}
-      </SavedVideosContext.Consumer>
+      </AppTheme.Consumer>
     )
   }
-
-  return (
-    <ThemeContext.Consumer>
-      {value => {
-        const {isDarkTheme} = value
-
-        const theme = isDarkTheme ? 'dark' : 'light'
-        return (
-          <SavedVideosMainContainer data-testid="savedVideos" theme={theme}>
-            <Header />
-            <MainBody>
-              <SidebarContainer>
-                <Sidebar />
-              </SidebarContainer>
-              <SavedVideosContainer>
-                <SavedMenuContainer theme={theme}>
-                  <IconContainer theme={theme}>
-                    <RiMenuAddLine size={40} color="#ff0b37" />
-                  </IconContainer>
-                  <MenuHeading theme={theme}>Saved Videos</MenuHeading>
-                </SavedMenuContainer>
-                {savedList(value)}
-              </SavedVideosContainer>
-            </MainBody>
-          </SavedVideosMainContainer>
-        )
-      }}
-    </ThemeContext.Consumer>
-  )
 }
 
 export default SavedVideos
